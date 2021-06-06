@@ -33,10 +33,21 @@ exports.getUsers = (req, res) => {
 exports.newUser = (req, res) => {
   const db = connectFirestore()
   const newData = req.body
-  db.collection('users')
-    .add(newData)
+  db.collection('users').doc(newData.uid)
+    .set(newData)
     .then(() => this.getUsers(req, res))
     .catch((error) => res.send('Error', +error.message))
+}
+
+exports.updateUser = (req, res) => {
+  const db = connectFirestore()
+  const { userId } = req.params
+  const updateData = req.body
+  db.collection('users')
+    .doc(userId)
+    .update(updateData)
+    .then(() => this.getUsers(req, res))
+    .catch((error) => res.status(500).send('Error updating', +error.message))
 }
 
 // exports.deleteUser = (req, res) => {
@@ -45,17 +56,6 @@ exports.newUser = (req, res) => {
 //   db.collection('users')
 //     .doc(userId)
 //     .delete()
-//     .then(() => this.getUsers(req, res))
-//     .catch((error) => res.send('Error', +error.message))
-// }
-
-// exports.updateUser = (req, res) => {
-//   const db = connectFirestore()
-//   const { userId } = req.params
-//   const newData = req.body
-//   db.collection('users')
-//     .doc(userId)
-//     .update(newData)
 //     .then(() => this.getUsers(req, res))
 //     .catch((error) => res.send('Error', +error.message))
 // }
