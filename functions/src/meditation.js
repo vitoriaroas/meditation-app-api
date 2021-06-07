@@ -50,12 +50,3 @@ exports.updateUser = (req, res) => {
     .catch((error) => res.status(500).send('Error updating', +error.message))
 }
 
-// exports.deleteUser = (req, res) => {
-//   const db = connectFirestore()
-//   const { userId } = req.params
-//   db.collection('users')
-//     .doc(userId)
-//     .delete()
-//     .then(() => this.getUsers(req, res))
-//     .catch((error) => res.send('Error', +error.message))
-// }
