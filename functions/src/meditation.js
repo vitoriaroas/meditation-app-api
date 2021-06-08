@@ -1,6 +1,7 @@
 const admin = require('firebase-admin')
 const { connectFirestore } = require('./firestore')
 
+
 exports.getUserId = (req, res) => {
   const db = connectFirestore()
   const { usersId } = req.params
@@ -10,8 +11,8 @@ exports.getUserId = (req, res) => {
     .then((doc) => {
       let user = doc.data()
       user.id = doc.id
+      res.send(user)
     })
-  res.send(user)
 }
 
 exports.getUsers = (req, res) => {
@@ -42,10 +43,12 @@ exports.newUser = (req, res) => {
 exports.updateUser = (req, res) => {
   const db = connectFirestore()
   const { userId } = req.params
-  const updateData = req.body
+  const { count } = req.body
   db.collection('users')
     .doc(userId)
-    .update(updateData)
+    .update({
+      count: admin.firestore.FieldValue.increment(count)
+    })
     .then(() => this.getUsers(req, res))
     .catch((error) => res.status(500).send('Error updating', +error.message))
 }
